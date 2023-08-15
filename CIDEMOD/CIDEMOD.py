@@ -1,5 +1,7 @@
 # %%
 import json, yaml, sys, os
+import numpy as np
+import matplotlib.pyplot as plt
 from cideMOD import (
     ModelOptions,
     CSI
@@ -7,14 +9,14 @@ from cideMOD import (
 with open('rendered_wano.yml') as file:
     wano_file1 = yaml.full_load(file)
 
-n_cycles     = wano_file1["cideMOD parameters"]['n_cycles']
-crate        = wano_file1["cideMOD parameters"]['crate']
-v_min        = wano_file1["cideMOD parameters"]['v_min']
-v_max        = wano_file1["cideMOD parameters"]['v_max']
-cycling_lump = wano_file1["Safari 2009 case files"]['Cycling lumped']
-cycling_work = wano_file1["Safari 2009 case files"]['Cycling workflow']
-OGV_G = wano_file1["Safari 2009 case files"]['OCV_G']
-OGV_LCO = wano_file1["Safari 2009 case files"]['OCV_LCO']
+n_cycles     = wano_file1["Testplan parameters"]['n_cycles']
+crate        = wano_file1["Testplan parameters"]['crate']
+v_min        = wano_file1["Testplan parameters"]['v_min']
+v_max        = wano_file1["Testplan parameters"]['v_max']
+case         = wano_file1["cideMOD parameters"]['Case name']
+params       = wano_file1["cideMOD parameters"]['Parameters json']
+OCP_neg      = wano_file1["cideMOD parameters"]['Negative electrode OCP']
+OCP_pos      = wano_file1["cideMOD parameters"]['Positive electrode OCP']
 
 
 # check if the ../kmc_data.yml exists
@@ -27,21 +29,21 @@ except IOError:
     sys.exit()
     
   
-sei_delta0        = wano_file2["thickness"]*1e-9
+sei_delta0       = wano_file2["thickness"]*1e-9
 sei_porosity     = wano_file2["porosity"]
     
 
 # %%
 overwrite = False
-case = "Safari_2009"
+case = case.replace(" ", "_")
 data_path = os.getcwd()
 
 model_options = ModelOptions(mode='P2D', clean_on_exit=False, solve_SEI=True)
 
 # %%
-c_nom = 1.8
+c_nom = 1.8 # TODO: Think how to handle this? Just use the case capacity.
 
-# %%
+# %% Define test plan
 I_app = crate * c_nom
 t_max = 1 / crate * 1.25
 cycling = {
@@ -101,18 +103,18 @@ cycling_test_plan = {
 
 
 # %% Diffusion limited case
-cell = json.load(open(cycling_lump))
+cell = json.load(open(params))
+
+# Note that the OCP filenames must match the ones in the json
+
+# Define new SEI parameters for KMC
 sei_dict = cell['negativeElectrode']['SEI']
-sei_dict['solventDiffusion'].update({"value": 6.8e-21})
-sei_dict['rateConstant'].update({"value": 1.36e-7})
 
 ref_porosity = sei_dict['solventPorosity']['value']
 ref_density = sei_dict['density']['value']
 ref_conductivity = sei_dict['conductivity']['value']
 
-# THIS WOULD BE AN INPUT FROM KMC -----
 sei_density = ref_density / (1 - ref_porosity) * (1 - sei_porosity)
-# THIS WOULD BE AN INPUT FROM KMC -----
 sei_conductivity = ref_conductivity / (1 - ref_porosity) * (1 - sei_porosity)
 
 sei_dict['solventPorosity'].update({"value": sei_porosity})
@@ -125,3 +127,52 @@ bms_dl.read_test_plan(cycling_test_plan)
 bms_dl.run_test_plan()
 
 problem_dl = bms_dl.problem
+
+# %% Plot figures
+
+# Extract problem variables
+vars_ = ['time', 'current', 'voltage', 'delta_sei_a0', 'Q_sei_a0']
+results = {var_: np.array(problem_dl.WH.get_global_variable(var_)) for var_ in vars_}
+
+# SEI properties
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4), dpi=150)
+
+index = np.append(np.where(np.diff(results['current'])<(-crate*c_nom))[0], 
+                  len(results['current'])-1)
+# index2 = np.append(np.where(np.diff(results['current'])>(crate*c_nom*1.2))[0], 
+#                   len(results['current'])-1)
+nCycles = len(index)
+cycles = np.arange(1,nCycles+1)
+
+av_thickness = results['delta_sei_a0'][index]
+ax1.plot(cycles, av_thickness, "-.", label='cideMOD')
+ax1.set_title("SEI thickness")
+ax1.set_xlabel("Cycle nr.")
+ax1.set_ylabel("SEI thickness [$\mu\,\mathrm{m^2}$]")
+# ax1.legend(loc="best")
+ax1.set_xlim([0, nCycles])
+
+av_capacity_loss = results['Q_sei_a0'][index]
+ax2.plot(cycles, av_capacity_loss/c_nom*100, "-.", label='cideMOD')
+ax2.set_title("Capacity loss")
+ax2.set_xlabel("Cycle nr.")
+ax2.set_ylabel("Capacity loss [$\%$]")
+# ax1.legend(loc="best")
+ax2.set_xlim([0, nCycles])
+
+plt.tight_layout()
+plt.savefig("SEI_results.png")
+
+# First and last cycle discharge curve
+fig, ax1 = plt.subplots(1, 1, figsize=(6, 4), dpi=150)
+dch_voltage = results['voltage'][results['current'] < 0]
+index2 = np.where(np.diff(dch_voltage)>0)[0]
+ax1.plot(results['time'][0:index2[0]], results['voltage'][0:index2[0]], 
+         label="Cycle 1")
+ax1.plot(results['time'][index[-2]:index2[-1]], results['voltage'][index[-2]:index2[-1]], 
+         label=f"Cycle {n_cycles}")
+
+ax2.set_xlabel("Discharge time [s]")
+ax2.set_ylabel("Voltage [V]")
+
+plt.savefig("voltage_vs_time.png")

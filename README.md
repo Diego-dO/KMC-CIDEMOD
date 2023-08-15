@@ -65,7 +65,7 @@ source /path/to/etc/profile.d/conda.sh
 conda activate python_env_kmc
 ```
 
-For the CIDEMOD WaNo, follow python installayion instruction from `cideMOD` [documentation](https://cidemod.readthedocs.io/en/latest/). Then modify the run.sh in CIDEMOD WaNo direcory as:
+For the CIDEMOD WaNo, follow python installation instructions from `cideMOD` [documentation](https://cidemod.readthedocs.io/en/latest/). Then modify the run.sh in CIDEMOD WaNo direcory as:
 ```
 # source the conda environment
 source /path/to/etc/profile.d/conda.sh
@@ -74,23 +74,23 @@ conda activate python_env_cidemod
 You can install all python packages in one environment.
 ## 2. KMC_SEI Inputs
 - **Lattice size**: Identifying the 2D lattice size.
-- **Temperature**: Specifying the teparature.
+- **Temperature**: Specifying the temperature.
 - **Save step**: Setting a KMC step at which the output will be updated.
 - **Activation energy barriers**: Configuring the activation energy barriers of all involved reaction in KMC simulation (See table S1 [here](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1002%2Faenm.202203966&file=aenm202203966-sup-0001-SuppMat.pdf).
   Running this WaNo, a `rendered_wano.yml` file with all input parameters will be generated in the WaNo's directory.
 
 ## 3. CIDEMOD Inputs
 - **KMC data**: The generated yaml file from the previous WaNo will be automaticly read in the second WaNo
-- **JSON and TXT files**: Depending on the battery cell your are studying, you need to pass a set of files  as the case definition (more information on [cideMOD webpage](https://github.com/cidetec-energy-storage/cideMOD).
-- **Number of cycles**: setting a values as the number of cycles as the first cideMOD parameter.
-- **Crate**: setting a values as crate for the study case.
-- **Minimum voltage**: setting a values as the minimum voltgae.
-- **Maximum voltage**: setting a values as the maximum voltage.
+- **JSON and TXT files**: Depending on the battery cell your are studying, you need to pass a set of files  as the case definition (more information on [cideMOD webpage](https://github.com/cidetec-energy-storage/cideMOD)).
+- **Number of cycles**: setting the values as the number of cycles as the first cideMOD parameter.
+- **Crate**: setting the value of the C-rate.
+- **Lower cutoff voltage**: setting the value of the lower cutoff voltage.
+- **Upper cutoff voltage**: setting the value of the upper cutoff voltage.
 Running this WaNo, a `rendered_wano.yml` file with all input parameters will be generated in the WaNo's directory.
 
 
 ## 4.KMC_CIDEMOD Output
-Running the Workflow, it performs KMC simulation for the speficied configuration, and provide the SEI properties as `kmc_data.yml` for the the second WaNo. The cideMOD WaNo then uses the passed parameters and provide cell performence profiles as current, voltage, capacity etc.
+Running the Workflow, it performs KMC simulation for the specified configuration, and provide the SEI properties as `kmc_data.yml` for the the second WaNo. The cideMOD WaNo then uses the passed parameters and provide cell performence profiles as current, voltage, capacity etc.
 
 
 ## 5. Running this WaNo

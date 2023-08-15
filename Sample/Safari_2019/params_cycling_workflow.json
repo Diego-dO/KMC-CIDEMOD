@@ -16,7 +16,7 @@
         "area": {"unit": "m^2", "value": 0.067718},
         "porosity": {"unit": "-", "value": 0.485},
         "bruggeman": {"unit": "-", "value": 4},
-        "electronicConductivity": {"unit": "S/m", "value": 49, "effective": true, "notas": "Ramadass (2004)"},
+        "electronicConductivity": {"unit": "S/m", "value": 49, "effective": true, "notes": "Ramadass (2004)"},
         "active_materials": 
         [
 	      {
@@ -64,7 +64,7 @@
         "area": {"unit": "m^2", "value": 0.0677},
         "porosity": {"unit": "-", "value": 0.385},
         "bruggeman": {"unit": "-", "value": 4},
-        "electronicConductivity": {"unit": "S/m", "value": 59, "effective": true, "notas":"Ramadass (2004)"},
+        "electronicConductivity": {"unit": "S/m", "value": 59, "effective": true, "notes":"Ramadass (2004)"},
         "active_materials": 
         [
 	      {
@@ -98,7 +98,7 @@
             "value": "(4.1253e-4+5.007e-3*(c_e*1e-3)-4.7212e-3*(c_e*1e-3)**2+1.5094e-3*(c_e*1e-3)**3-1.6018e-4*(c_e*1e-3)**4)*100",
             "effective": false,
             "correction":"bruggeman",
-            "notas":"Cambiado a Ramadass (2004)"
+            "notes":"Ramadass (2004)"
         },
         "transferenceNumber": {"unit": "-", "value": 0.363},
         "activityDependence": {
