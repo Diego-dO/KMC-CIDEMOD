@@ -42,7 +42,7 @@ The KMC_CIDEMOD workflow consists of two Workflow Active Nodes (WaNos) that coll
 Workflow Description
 ---------------------
 
-The simstack workflow used in this study starts with the KMC_SEI, where a KMC simulation for SEI formation is conducted to pass SEI thickness and porosity to the CIDEMOD WaNo. The second part of the workflow uses these KMC parameters along with additional user inputs to calculate current, capacity, and voltage profiles for different study cases. The output of the first WaNO (SEI properties) can vary based on the system's condition in the KMC_SEI WaNo (lattice size, temperature, and barriers). As a result, studying different cases in the second WaNo leads to different profiles of current, capacity, and voltages as cell performance.
+The SimStack workflow used in this study starts with the KMC_SEI, where a KMC simulation for SEI formation is conducted to pass SEI thickness and porosity to the CIDEMOD WaNo. The second part of the workflow uses these KMC parameters along with additional user inputs to calculate current, capacity, and voltage profiles for different study cases. The output of the first WaNO (SEI properties) can vary based on the system's condition in the KMC_SEI WaNo (lattice size, temperature, and barriers). As a result, studying different cases in the second WaNo leads to different profiles of current, capacity, and voltages as cell performance.
 
 Usage
 -----
@@ -54,7 +54,7 @@ To use the KMC_CIDEMOD workflow, follow the instructions provided in the reposit
 To get this WaNo up and running on your available computational resources, make sure to have the below libraries installed on Python 3.7 or newer for the KMC_SEI WaNo:
 
 ```
-itertools, os, random, sys, time, pickle, numpy, uniform, random, choice, sample, randrange,shuffle, math, yaml.
+itertools, os, random, sys, time, pickle, numpy, uniform, random, choice, sample, randrange, shuffle, math, yaml.
 ```
 We recommend you to create a python (conda) `env` and install all mentioned python libraries. Then you can modify the `run.sh` file in KMC_SEO WaNo directory by sourcing the python environment that includes all required libraries:
 
@@ -65,7 +65,7 @@ source /path/to/etc/profile.d/conda.sh
 conda activate python_env_kmc
 ```
 
-For the CIDEMOD WaNo, follow python installation instructions from `cideMOD` [documentation](https://cidemod.readthedocs.io/en/latest/). Then modify the run.sh in CIDEMOD WaNo direcory as:
+For the CIDEMOD WaNo, follow python installation instructions from `cideMOD` [documentation](https://cidemod.readthedocs.io/en/latest/). Then modify the run.sh in CIDEMOD WaNo directory as:
 ```
 # source the conda environment
 source /path/to/etc/profile.d/conda.sh
@@ -76,11 +76,11 @@ You can install all python packages in one environment.
 - **Lattice size**: Identifying the 2D lattice size.
 - **Temperature**: Specifying the temperature.
 - **Save step**: Setting a KMC step at which the output will be updated.
-- **Activation energy barriers**: Configuring the activation energy barriers of all involved reaction in KMC simulation (See table S1 [here](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1002%2Faenm.202203966&file=aenm202203966-sup-0001-SuppMat.pdf).
+- **Activation energy barriers**: Configuring the activation energy barriers of all involved reaction in KMC simulation (See table S1 [here](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1002%2Faenm.202203966&file=aenm202203966-sup-0001-SuppMat.pdf)).
   Running this WaNo, a `rendered_wano.yml` file with all input parameters will be generated in the WaNo's directory.
 
 ## 3. CIDEMOD Inputs
-- **KMC data**: The generated yaml file from the previous WaNo will be automaticly read in the second WaNo
+- **KMC data**: The generated yaml file from the previous WaNo will be automatically read in the second WaNo
 - **JSON and TXT files**: Depending on the battery cell your are studying, you need to pass a set of files  as the case definition (more information on [cideMOD webpage](https://github.com/cidetec-energy-storage/cideMOD)).
 - **Number of cycles**: setting the values as the number of cycles as the first cideMOD parameter.
 - **Crate**: setting the value of the C-rate.
@@ -90,13 +90,13 @@ Running this WaNo, a `rendered_wano.yml` file with all input parameters will be 
 
 
 ## 4.KMC_CIDEMOD Output
-Running the Workflow, it performs KMC simulation for the specified configuration, and provide the SEI properties as `kmc_data.yml` for the the second WaNo. The cideMOD WaNo then uses the passed parameters and provide cell performence profiles as current, voltage, capacity etc.
+Running the Workflow, it performs KMC simulation for the specified configuration, and provide the SEI properties as `kmc_data.yml` for the the second WaNo. The cideMOD WaNo then uses the passed parameters and provide cell performance profiles as current, voltage, capacity etc.
 
 
 ## 5. Running this WaNo
 
 - Step 1. Move the KMC_SEI and CIDEMOD folder to the WaNo directory. 
-- Step 2. Open Simstack on your computer and connect to your remote resource.
+- Step 2. Open SimStack on your computer and connect to your remote resource.
 - Step 3. Drag the WaNos from the top left menu to the SimStack canvas as shown in above figures.
 - Step 4. A double click on the KMC_SEI WaNo will allow you to make the setups in the Input parameters.
 - step 5. A double click on the CIDEMOD WaNo will allow you to make the setups in the Input parameters.
@@ -104,7 +104,7 @@ Running the Workflow, it performs KMC simulation for the specified configuration
 
 Sample
 -----
-The provided sample present the results for 'Safari_2019' data. Here a workflow as a KMC simulation for a parameters in `rendered_wano_kmc.yml` together with cideMOD parameters in `rendered_wano_kmc.yml` using data located `Safari_2019` resulted in data located in `results_Safari-2019_dl`.
+The provided sample present the results for 'Safari_2009' data. Here a workflow as a KMC simulation for a parameters in `rendered_wano_kmc.yml` together with cideMOD parameters in `rendered_wano_kmc.yml` using data located `Safari_2009` resulted in data located in `results_Safari-2009_dl`.
 
 Acknowledgments
 ---------------

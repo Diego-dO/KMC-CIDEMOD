@@ -14,10 +14,14 @@
 
   <WaNoRoot name="CIDEMOD">
       <WaNoDictBox name="cideMOD parameters">    
-        <WaNoString name="Case name">"Sample case"</WaNoString>
+        <WaNoString name="Case name">Sample case</WaNoString>
         <WaNoFile logical_filename="params_cycling_workflow.json" name="Parameters json" local="True">params_cycling_workflow.json</WaNoFile>
         <WaNoFile logical_filename="OCV_G.txt" name="Negative electrode OCP" local="True">OCV_G.txt</WaNoFile>
         <WaNoFile logical_filename="OCV_LCO.txt" name="Positive electrode OCP" local="True">OCV_LCO.txt</WaNoFile>
+        <WaNoDropDown name="SEI model">
+            <Entry id=0 chosen=True>"Solvent diffusion-limited"</Entry>
+            <Entry id=1>"Electron conduction"</Entry>
+        </WaNoDropDown>
       </WaNoDictBox>
       <WaNoDictBox name="Testplan parameters">
             <WaNoInt name="n_cycles" description="Cycles">100</WaNoInt>
